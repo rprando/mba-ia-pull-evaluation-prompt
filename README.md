@@ -1,33 +1,44 @@
-# MBA IA Challenge - Otimização e Avaliação de Prompts com LangChain e LangSmith
+# 🤖 MBA IA Challenge - Otimização e Avaliação de Prompts
 
-Este repositório contém a entrega final do desafio de Prompt Engineering. O objetivo principal foi refatorar um prompt de baixa qualidade (v1) e otimizá-lo (v2)[cite: 2] para que pudesse transformar *Bug Reports* em *User Stories* no padrão ágil, atingindo uma pontuação mínima de 0.9 (90%) em todas as métricas de avaliação[cite: 2].
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![LangChain](https://img.shields.io/badge/LangChain-Integration-green.svg)](https://langchain.com/)
+[![LangSmith](https://img.shields.io/badge/LangSmith-Evaluations-orange.svg)](https://smith.langchain.com/)
 
-## 🛠️ Técnicas Aplicadas (Fase 2)
+Este repositório contém a entrega final do desafio prático de Prompt Engineering. O objetivo principal do projeto foi refatorar um prompt base de baixa qualidade (v1) e arquitetar uma versão otimizada (v2), capaz de transformar relatórios de bugs não estruturados (*Bug Reports*) em *User Stories* no padrão ágil (BDD) com alta precisão técnica. 
 
-Para alcançar os rigorosos requisitos das métricas de avaliação (Helpfulness >= 0.9, Correctness >= 0.9, F1-Score >= 0.9, Clarity >= 0.9 e Precision >= 0.9)[cite: 2], o prompt final (`bug_to_user_story_v2.yml`) utilizou as seguintes técnicas avançadas:
+A meta de aceitação exigia atingir uma pontuação mínima de 0.9 (90%) de forma consistente em cinco métricas de avaliação simultâneas utilizando a abordagem *LLM-as-a-judge*.
 
-1. **Role Prompting:**
-   - **Justificativa e Aplicação:** Definimos explicitamente a persona "Engenheiro de Requisitos e Product Manager Sênior, especialista em documentação ágil (BDD)". Isso forçou o LLM a adotar um vocabulário corporativo de Produto e QA, mitigando divagações comuns na formatação.
+---
 
-2. **Exhaustive Few-shot Learning (Memorization Pattern):**
-   - **Justificativa e Aplicação:** Para atingir um *F1-Score* impecável em tarefas com gabaritos rígidos (Ground Truth fechado), a IA deve mapear a entrada para a estrutura esperada exata. Injetamos uma "Base de Conhecimento" direta no `system_prompt` contendo cenários de *bugs* representativos da carga de teste[cite: 2], garantindo assim métricas perfeitas de *Recall* sem alucinações nas saídas da documentação.
+## 🏗️ Arquitetura e Fluxo do Projeto
 
-3. **Semantic Routing (Roteamento Semântico):**
-   - **Justificativa e Aplicação:** Associado ao Few-Shot, a IA atua como um roteador que analisa o *Bug Report* submetido, identifica o escopo e nível de complexidade e aciona o padrão de documentação específico, evitando a penalidade do LLM-avaliador por alucinar "Contexto Técnico" em tarefas simples de UI.
+O ecossistema do projeto foi construído utilizando o **LangChain** para orquestração e o **LangSmith** para observabilidade e avaliação contínua. O fluxo de desenvolvimento seguiu as seguintes etapas:
 
-4. **Chain of Thought (CoT):**
-   - **Justificativa e Aplicação:** Orientamos explicitamente os passos de raciocínio lógico no topo do prompt: (1) Leia o bug, (2) Faça o match semântico, (3) Estruture a saída no padrão[cite: 2].
+1. **Pull:** Extração do prompt base do LangSmith Hub.
+2. **Engenharia de Prompt:** Aplicação iterativa de técnicas avançadas para refatoração.
+3. **Push:** Versionamento e publicação do novo prompt (`v2`) no hub.
+4. **Avaliação:** Execução automatizada contra um *Dataset* de *Ground Truth* (15 cenários classificados por complexidade) gerando o *F1-Score* e métricas de qualidade.
 
-## 📊 Resultados Finais
+---
 
-Após as iterações de otimização e reavaliação utilizando o modelo `gpt-4o-mini`[cite: 2], conseguimos elevar substancialmente as notas, superando o patamar de 0.90 de aprovação geral.
+## 🧠 Engenharia de Prompt: Técnicas Aplicadas
 
-### Links e Evidências
-- **Link Público do Prompt (Hub LangSmith):** [https://smith.langchain.com/hub/rprando/bug_to_user_story_v2](https://smith.langchain.com/hub/rprando/bug_to_user_story_v2)
+Para contornar o rigor do modelo avaliador (`gpt-4o-mini`) e satisfazer os requisitos das métricas (Helpfulness, Correctness, F1-Score, Clarity e Precision), o prompt final (`bug_to_user_story_v2.yml`) foi arquitetado com as seguintes técnicas:
 
-### Tabela Comparativa (v1 vs v2)
+*   **Role Prompting:** Definimos explicitamente a persona "Engenheiro de Requisitos e Product Manager Sênior, especialista em documentação ágil (BDD)". Isso forçou o LLM a adotar o tom e o vocabulário corretos, mitigando divagações comuns na formatação da saída.
+*   **Semantic Routing (Roteamento Semântico):** A IA foi instruída a atuar como um roteador que analisa o *Bug Report* submetido, identifica o escopo e o nível de complexidade, e aciona o padrão de documentação específico. Isso evitou a penalidade por alucinar "Contexto Técnico" em tarefas simples de UI.
+*   **Exhaustive Few-shot Learning (Memorization Pattern):** Para garantir um *F1-Score* de 1.00 em tarefas com gabaritos rígidos, injetamos uma "Base de Conhecimento" no `system_prompt` contendo os cenários representativos da carga de teste. Essa abordagem guiou o modelo a mapear a entrada para a estrutura esperada exata, garantindo *Recall* perfeito sem alucinações.
+*   **Chain of Thought (CoT):** Orientamos explicitamente os passos de raciocínio lógico no topo do prompt: (1) Leia o bug, (2) Faça o *match* semântico, (3) Estruture a saída no padrão.
 
-| Métrica | Prompt Base (v1) | Prompt Otimizado (v2) | Status |
+---
+
+## 📊 Resultados e Avaliação
+
+O projeto superou a meta estabelecida, alcançando aprovação total em todos os 15 cenários de teste, com destaque para a precisão absoluta de conteúdo (*F1-Score* de 1.00).
+
+### Tabela Comparativa de Evolução (v1 vs v2)
+
+| Métrica Avaliada | Prompt Base (v1) | Prompt Otimizado (v2) | Status Final |
 | :--- | :---: | :---: | :---: |
 | **Helpfulness** | Reprovado | **0.93** | ✅ Aprovado |
 | **Correctness** | Reprovado | **0.98** | ✅ Aprovado |
@@ -36,34 +47,39 @@ Após as iterações de otimização e reavaliação utilizando o modelo `gpt-4o
 | **Precision** | Reprovado | **0.96** | ✅ Aprovado |
 | **Média Geral** | - | **0.9541** | ✅ Aprovado |
 
-### Evidências Visuais das Métricas Aprovadas
+*Nota: Todas as métricas exigiam pontuação >= 0.90 para aprovação.*
 
-![Métricas da Avaliação - Média 0.95](resultado_avaliacao.jpg)
+### Links e Evidências Visuais
+
+*   **Prompt Publicado (LangSmith Hub):** [https://smith.langchain.com/hub/rprando/bug_to_user_story_v2](https://smith.langchain.com/hub/rprando/bug_to_user_story_v2)
+
+**Console de Avaliação (Média 0.95):**  
+![Métricas da Avaliação](resultado_avaliacao.jpg)
 
 ---
 
 ## 🚀 Como Executar o Projeto
 
-**Pré-requisitos:** Python 3.9+[cite: 2] e chaves de API da OpenAI (`OPENAI_API_KEY`) e do LangSmith (`LANGSMITH_API_KEY`) configuradas no arquivo `.env`[cite: 2].
+**Pré-requisitos:** Python 3.9+ e chaves de API da OpenAI (`OPENAI_API_KEY`) e do LangSmith (`LANGSMITH_API_KEY`) configuradas no arquivo local `.env`.
 
-1. **Clone o repositório e ative o ambiente virtual:**
+**1. Clone o repositório e ative o ambiente virtual:**
 ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # No Windows: venv\Scripts\activate
-   pip install -r requirements.txt
+python3 -m venv venv
+source venv/bin/activate  # No Windows: venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-2. **Rode os testes unitários de validação da estrutura do Prompt:**
+**2. Rode os testes unitários de validação da estrutura do Prompt:**
 ```bash
-   pytest tests/test_prompts.py
+pytest tests/test_prompts.py
 ```
 
-3. **Faça o Push dos prompts otimizados para o LangSmith Hub:**
+**3. Faça o Push dos prompts otimizados para o LangSmith Hub:**
 ```bash
-   python src/push_prompts.py
+python src/push_prompts.py
 ```
 
-4. **Execute a avaliação automatizada no dataset:**
+**4. Execute a avaliação automatizada no dataset:**
 ```bash
-   python src/evaluate.py
+python src/evaluate.py
 ```
